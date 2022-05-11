@@ -1,7 +1,23 @@
 import { Text, ScrollView, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Task from '../components/Task';
 
+import { getAuth, signOut } from 'firebase/auth';
+
 const ProfileScreen = () => {
+  const auth = getAuth();
+
+  const handleSignOut = () => {
+    const userEmail = auth.currentUser?.email
+
+    signOut(auth).then(() => {
+      // Sign-out successful.
+      // navigation.navigate("Login");
+      console.log(userEmail, 'signed out successfully');
+    }).catch((error) => {
+      // An error happened.
+    })
+  };
+
   return (
     <ScrollView
       style={styles.container}>
@@ -15,16 +31,21 @@ const ProfileScreen = () => {
 
         <View style={styles.profileInfoView}>
 
-          <Text style={styles.name}>Juan Rodrigo</Text>
+          <Text style={styles.name}>{auth.currentUser?.email}</Text>
           <Text style={styles.about}>Young enthusiast who's willing to reach the perfection by challenging myself every single day</Text>
 
           <View style={styles.profileButtons}>
             <TouchableOpacity style={styles.friendsBtn}>
               <Text style={styles.friendsNum}>175 friends</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.friendsBtn}>
-              <Text style={styles.friendsNum}>3 active challenges</Text>
+            <TouchableOpacity 
+              onPress={handleSignOut}
+              style={styles.friendsBtn}>
+              <Text style={styles.friendsNum}>Sign Out</Text>
             </TouchableOpacity>
+            {/* <TouchableOpacity style={styles.friendsBtn}>
+              <Text style={styles.friendsNum}>3 active challenges</Text>
+            </TouchableOpacity> */}
           </View>
 
         </View>
